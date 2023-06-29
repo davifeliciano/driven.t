@@ -8,6 +8,14 @@ const cepValidationSchema = Joi.string().length(9).custom(JoiCepValidation).requ
 
 const mobilePhoneValidationSchema = Joi.string().min(14).max(15).custom(joiMobilePhoneValidation).required();
 
+type CEPQueryParams = {
+  cep: string;
+};
+
+export const cepQueryParamsSchema = Joi.object<CEPQueryParams>({
+  cep: Joi.string().length(8).required(),
+});
+
 export const createOrUpdateEnrollmentSchema = Joi.object<CreateOrUpdateEnrollmentWithAddress>({
   name: Joi.string().min(3).required(),
   cpf: cpfValidationSchema,
