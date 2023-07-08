@@ -45,10 +45,35 @@ export type ViaCEPResponseError = {
 
 export type ViaCEPResponse = ViaCEPResponseSuccess | ViaCEPResponseError;
 
-export type createTicketBody = {
+export type CreateTicketBody = {
   ticketTypeId: number;
 };
 
-export interface createTicketRequest extends AuthenticatedRequest {
-  body: createTicketBody;
+export interface CreateTicketRequest extends AuthenticatedRequest {
+  body: CreateTicketBody;
+}
+
+export type GetPaymentQuery = {
+  ticketId: string;
+};
+
+export interface GetPaymentRequest extends AuthenticatedRequest {
+  query: GetPaymentQuery;
+}
+
+export type CardData = {
+  issuer: string;
+  number: number;
+  name: string;
+  expirationDate: Date;
+  cvv: number;
+};
+
+export type ProcessPaymentBody = {
+  ticketId: number;
+  cardData: CardData;
+};
+
+export interface ProcessPaymentRequest extends AuthenticatedRequest {
+  body: ProcessPaymentBody;
 }
