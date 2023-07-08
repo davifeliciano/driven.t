@@ -16,7 +16,7 @@ export const cepQueryParamsSchema = Joi.object<CEPQueryParams>({
   cep: Joi.string().length(8).required(),
 });
 
-export const createOrUpdateEnrollmentSchema = Joi.object<CreateOrUpdateEnrollmentWithAddress>({
+export const createEnrollmentSchema = Joi.object<CreateOrUpdateEnrollmentWithAddress>({
   name: Joi.string().min(3).required(),
   cpf: cpfValidationSchema,
   birthday: Joi.string().isoDate().required(),
