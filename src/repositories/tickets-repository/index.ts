@@ -1,4 +1,4 @@
-import { Enrollment, TicketStatus } from '@prisma/client';
+import { Enrollment } from '@prisma/client';
 import { prisma } from '@/config';
 
 async function findTicket(ticketId: number) {
@@ -9,10 +9,6 @@ async function findTicketFromEnrollment(enrollment: Enrollment) {
   return prisma.ticket.findFirst({ where: { enrollmentId: enrollment.id }, include: { TicketType: true } });
 }
 
-async function updateStatus(ticketId: number, status: TicketStatus) {
-  return prisma.ticket.update({ where: { id: ticketId }, data: { status } });
-}
-
 async function createTicket(enrollmentId: number, ticketTypeId: number) {
   return prisma.ticket.create({
     data: { enrollmentId, ticketTypeId, status: 'RESERVED' },
@@ -20,6 +16,6 @@ async function createTicket(enrollmentId: number, ticketTypeId: number) {
   });
 }
 
-const ticketsRepository = { findTicket, findTicketFromEnrollment, updateStatus, createTicket };
+const ticketsRepository = { findTicket, findTicketFromEnrollment, createTicket };
 
 export default ticketsRepository;

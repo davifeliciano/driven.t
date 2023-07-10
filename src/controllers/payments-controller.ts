@@ -10,6 +10,6 @@ export async function getPaymentController(req: GetPaymentRequest, res: Response
 
 export async function processPaymentController(req: ProcessPaymentRequest, res: Response) {
   const { ticketId, cardData } = req.body;
-  const payment = await paymentsService.processPayment(ticketId, cardData, req.userId);
-  return res.send(payment);
+  const ticketWithPayment = await paymentsService.processPayment(ticketId, cardData, req.userId);
+  return res.send(ticketWithPayment.Payment[0]);
 }

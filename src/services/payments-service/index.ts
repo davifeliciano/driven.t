@@ -29,15 +29,10 @@ async function processPayment(ticketId: number, cardData: CardData, userId: numb
   }
 
   const value = ticket.TicketType.price;
-  const { issuer } = cardData;
+  const cardIssuer = cardData.issuer;
   const cardLastDigits = cardData.number.toString().slice(-4);
 
-  const [payment, _] = await Promise.all([
-    paymentsRepository.createPayment(ticketId, value, issuer, cardLastDigits),
-    ticketsRepository.updateStatus(ticketId, 'PAID'),
-  ]);
-
-  return payment;
+  return paymentsRepository.createPayment(ticketId, value, cardIssuer, cardLastDigits);
 }
 
 const paymentsService = {

@@ -5,7 +5,11 @@ async function getPaymentFromTicket(ticketId: number) {
 }
 
 async function createPayment(ticketId: number, value: number, cardIssuer: string, cardLastDigits: string) {
-  return prisma.payment.create({ data: { ticketId, value, cardIssuer, cardLastDigits } });
+  return prisma.ticket.update({
+    where: { id: ticketId },
+    data: { status: 'PAID', Payment: { create: { value, cardIssuer, cardLastDigits } } },
+    include: { Payment: true },
+  });
 }
 
 const paymentsRepository = {
