@@ -77,3 +77,11 @@ export type ProcessPaymentBody = {
 export interface ProcessPaymentRequest extends AuthenticatedRequest {
   body: ProcessPaymentBody;
 }
+
+export type GetHotelByIdParams = {
+  hotelId: string;
+};
+
+export interface GetHotelByIdRequest extends AuthenticatedRequest {
+  params: GetHotelByIdParams;
+}
