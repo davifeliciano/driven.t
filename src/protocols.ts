@@ -85,3 +85,19 @@ export type GetHotelByIdParams = {
 export interface GetHotelByIdRequest extends AuthenticatedRequest {
   params: GetHotelByIdParams;
 }
+
+export type PostBookingBody = {
+  roomId: number;
+};
+
+export interface PostBookingRequest extends AuthenticatedRequest {
+  body: PostBookingBody;
+}
+
+export type PutBookingParams = {
+  bookingId: string;
+};
+
+export interface PutBookingRequest extends PostBookingRequest {
+  params: PutBookingParams;
+}

@@ -1,26 +1,31 @@
 import { NextFunction, Response } from 'express';
-import { AuthenticatedRequest } from '@/protocols';
+import { ApplicationError, AuthenticatedRequest } from '@/protocols';
 import { prisma } from '@/config';
-import { notFoundError } from '@/errors';
-import { paymentRequiredError } from '@/errors/payment-required-error';
 
-export async function validateTicket(req: AuthenticatedRequest, _res: Response, next: NextFunction) {
-  const user = await prisma.user.findUnique({
-    where: { id: req.userId },
-    include: { Enrollment: { include: { Ticket: { include: { TicketType: true } } } } },
-  });
+export interface ValidateTicketParams {
+  onMissingEnrollmentOrTicket: ApplicationError;
+  onWrongTicketState: ApplicationError;
+}
 
-  if (user.Enrollment.length === 0 || user.Enrollment[0].Ticket.length === 0) {
-    throw notFoundError();
-  }
+export function validateTicket(errorsToThrow: ValidateTicketParams) {
+  return async (req: AuthenticatedRequest, _res: Response, next: NextFunction) => {
+    const user = await prisma.user.findUnique({
+      where: { id: req.userId },
+      include: { Enrollment: { include: { Ticket: { include: { TicketType: true } } } } },
+    });
 
-  if (
-    user.Enrollment[0].Ticket[0].status !== 'PAID' ||
-    user.Enrollment[0].Ticket[0].TicketType.isRemote ||
-    !user.Enrollment[0].Ticket[0].TicketType.includesHotel
-  ) {
-    throw paymentRequiredError();
-  }
+    if (user.Enrollment.length === 0 || user.Enrollment[0].Ticket.length === 0) {
+      throw errorsToThrow.onMissingEnrollmentOrTicket;
+    }
 
-  next();
+    if (
+      user.Enrollment[0].Ticket[0].status !== 'PAID' ||
+      user.Enrollment[0].Ticket[0].TicketType.isRemote ||
+      !user.Enrollment[0].Ticket[0].TicketType.includesHotel
+    ) {
+      throw errorsToThrow.onWrongTicketState;
+    }
+
+    next();
+  };
 }
